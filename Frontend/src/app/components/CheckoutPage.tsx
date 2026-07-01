@@ -211,13 +211,50 @@ function CheckoutInner() {
   const getInputCls = (key: keyof FormState) =>
     errors[key] ? inputErrCls : inputCls;
 
-  const handleWhatsAppOrder = () => {
+  const handleWhatsAppOrder = async () => {
     const formErrors = validateForm(form);
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
+
+    // Best-effort: persist the order so it shows up in the admin dashboard.
+    // A failure here must not block the customer from reaching WhatsApp.
+    try {
+      await fetch(`${BACKEND}/orders/manual`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          billing: {
+            firstName: form.firstName,
+            lastName: form.lastName,
+            company: form.company || undefined,
+            district: form.district,
+            street: form.street,
+            apartment: form.apartment || undefined,
+            city: form.city,
+            postcode: form.postcode,
+            phone: form.phone,
+            email: form.email,
+            notes: form.notes || undefined,
+          },
+          items: state.items.map((item) => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            discountPercent: item.discountPercent,
+            quantity: item.quantity,
+            selectedColor: item.selectedColor,
+            category: item.category,
+            image: item.image,
+          })),
+        }),
+      });
+    } catch (err) {
+      console.error('Failed to save order:', err);
+    }
+
     const message = buildWhatsAppMessage(form, state.items, subtotal, total);
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank', 'noopener,noreferrer');

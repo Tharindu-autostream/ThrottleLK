@@ -12,6 +12,12 @@ export class OrdersController {
     return this.ordersService.createPayPalOrder(dto);
   }
 
+  /** Save an order placed through the WhatsApp / bank-transfer flow */
+  @Post('manual')
+  createManualOrder(@Body() dto: CreateOrderDto) {
+    return this.ordersService.createManualOrder(dto);
+  }
+
   /** Step 2 — capture the payment after user approves on PayPal */
   @Post(':paypalOrderId/capture')
   captureOrder(@Param('paypalOrderId') paypalOrderId: string) {

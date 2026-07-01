@@ -10,6 +10,7 @@
   import AdminLayout from "./app/admin/AdminLayout";
   import AdminProductsPage from "./app/admin/AdminProductsPage";
   import AdminCategoriesPage from "./app/admin/AdminCategoriesPage";
+  import AdminOrdersPage from "./app/admin/AdminOrdersPage";
   import AdminSiteContentPage from "./app/admin/AdminSiteContentPage";
   import "./styles/index.css";
 
@@ -25,6 +26,7 @@
               <Route index element={<Navigate to="/admin/products" replace />} />
               <Route path="products" element={<AdminProductsPage />} />
               <Route path="categories" element={<AdminCategoriesPage />} />
+              <Route path="orders" element={<AdminOrdersPage />} />
               <Route path="site-images" element={<AdminSiteContentPage />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />

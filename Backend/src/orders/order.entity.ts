@@ -59,6 +59,10 @@ export class Order {
   @Column({ nullable: true })
   paypalCaptureId: string;
 
+  /** How the order was placed: whatsapp | paypal */
+  @Column({ default: 'whatsapp' })
+  paymentMethod: string;
+
   /** pending | paid | failed | cancelled */
   @Column({ default: 'pending' })
   status: string;

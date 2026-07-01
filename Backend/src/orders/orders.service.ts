@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -74,6 +75,51 @@ export class OrdersService {
     return item.discountPercent && item.discountPercent > 0
       ? Math.round(item.price * (1 - item.discountPercent / 100))
       : item.price;
+  }
+
+  /**
+   * Persist an order placed through the WhatsApp / bank-transfer flow.
+   * No payment gateway is involved, so it is saved as a pending order that
+   * the admin can review and mark paid once the deposit slip arrives.
+   */
+  async createManualOrder(dto: CreateOrderDto): Promise<{ orderId: string }> {
+    const subtotal = dto.items.reduce(
+      (sum, item) => sum + this.effectivePrice(item) * item.quantity,
+      0,
+    );
+    const total = subtotal + SHIPPING_FEE;
+
+    const order = this.orderRepo.create({
+      billing: dto.billing,
+      items: dto.items,
+      subtotal,
+      shippingFee: SHIPPING_FEE,
+      total,
+      paymentMethod: 'whatsapp',
+      status: 'pending',
+    });
+    await this.orderRepo.save(order);
+
+    return { orderId: order.id };
+  }
+
+  /** List every order, newest first — used by the admin dashboard. */
+  findAll(): Promise<Order[]> {
+    return this.orderRepo.find({ order: { createdAt: 'DESC' } });
+  }
+
+  /** Update the fulfilment status of an order. */
+  async updateStatus(id: string, status: string): Promise<Order> {
+    const allowed = ['pending', 'paid', 'failed', 'cancelled'];
+    if (!allowed.includes(status)) {
+      throw new BadRequestException(`Invalid status: ${status}`);
+    }
+    const order = await this.orderRepo.findOne({ where: { id } });
+    if (!order) {
+      throw new NotFoundException(`Order ${id} not found`);
+    }
+    order.status = status;
+    return this.orderRepo.save(order);
   }
 
   /**
