@@ -1,0 +1,14 @@
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: throttle_lk
+    ports:
+      - '3306:3306'
+    volumes:
+      - throttle_lk_mysql_data:/var/lib/mysql
+
+volumes:
+  throttle_lk_mysql_data:

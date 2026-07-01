@@ -1,0 +1,77 @@
+import { Product } from './product.entity';
+
+/** Matches `Frontend/src/app/components/products.ts` */
+export const CATALOG_SEED: Partial<Product>[] = [
+  {
+    id: '1',
+    name: 'Shadow Pullover',
+    price: 4500,
+    category: 'Non Zip',
+    colors: ['#0A0A0A', '#2C2C2C', '#1a1a1a'],
+    image: 'https://picsum.photos/600/800?grayscale&random=10',
+  },
+  {
+    id: '2',
+    name: 'Asphalt Zip',
+    price: 5200,
+    category: 'Zip-up',
+    colors: ['#2C2C2C', '#4a4a4a'],
+    image: 'https://picsum.photos/600/800?grayscale&random=11',
+  },
+  {
+    id: '3',
+    name: 'Crimson Oversized',
+    price: 6500,
+    category: 'Limited Edition',
+    colors: ['#C0392B', '#0A0A0A'],
+    image: 'https://picsum.photos/600/800?grayscale&random=12',
+  },
+  {
+    id: '4',
+    name: 'Phantom Hood',
+    price: 5800,
+    category: 'Non Zip',
+    colors: ['#0A0A0A', '#F0EDE8'],
+    image: 'https://picsum.photos/600/800?grayscale&random=13',
+  },
+  {
+    id: '5',
+    name: 'Stealth Zip Hood',
+    price: 4800,
+    category: 'Zip-up',
+    colors: ['#0A0A0A', '#2C2C2C', '#1a1a1a'],
+    image: 'https://picsum.photos/600/800?grayscale&random=14',
+  },
+  {
+    id: '6',
+    name: 'Street Noir Limited',
+    price: 7500,
+    category: 'Limited Edition',
+    colors: ['#0A0A0A', '#C0392B', '#F0EDE8'],
+    image: 'https://picsum.photos/600/800?grayscale&random=15',
+  },
+  {
+    id: '7',
+    name: 'Urban Pullover',
+    price: 4200,
+    category: 'Non Zip',
+    colors: ['#2C2C2C', '#0A0A0A'],
+    image: 'https://picsum.photos/600/800?grayscale&random=16',
+  },
+  {
+    id: '8',
+    name: 'Velocity Zip',
+    price: 5500,
+    category: 'Zip-up',
+    colors: ['#C0392B', '#0A0A0A', '#2C2C2C'],
+    image: 'https://picsum.photos/600/800?grayscale&random=17',
+  },
+  {
+    id: '9',
+    name: 'Eclipse Rare',
+    price: 8200,
+    category: 'Limited Edition',
+    colors: ['#0A0A0A', '#2C2C2C', '#C0392B'],
+    image: 'https://picsum.photos/600/800?grayscale&random=18',
+  },
+];
