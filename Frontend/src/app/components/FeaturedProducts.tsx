@@ -20,7 +20,10 @@ export default function FeaturedProducts() {
   const [activeLeaf, setActiveLeaf] = useState<string>('all');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-  const [catalog, setCatalog] = useState<Product[] | null>(null);
+  const [catalog, setCatalog] = useState<Product[]>([]);
+  const [catalogLoadState, setCatalogLoadState] = useState<
+    'loading' | 'ready' | 'error'
+  >('loading');
   const [catalogNote, setCatalogNote] = useState<string | null>(null);
 
   useEffect(() => {
@@ -56,14 +59,23 @@ export default function FeaturedProducts() {
               .map(parseProductFromApi)
               .filter((p): p is Product => p !== null),
           );
+          setCatalogLoadState('ready');
           setCatalogNote(null);
         }
       } catch {
         if (!cancelled) {
-          setCatalog(staticProducts);
-          setCatalogNote(
-            'Showing offline catalog — start the API to load live products.',
-          );
+          if (import.meta.env.DEV) {
+            setCatalog(staticProducts);
+            setCatalogNote(
+              'Showing offline catalog — start the API to load live products.',
+            );
+          } else {
+            setCatalog([]);
+            setCatalogNote(
+              'Could not load products. Please refresh or try again shortly.',
+            );
+          }
+          setCatalogLoadState('error');
         }
       }
     })();
@@ -72,7 +84,12 @@ export default function FeaturedProducts() {
     };
   }, []);
 
-  const products = catalog ?? staticProducts;
+  const products =
+    catalogLoadState === 'ready'
+      ? catalog
+      : catalogLoadState === 'error' && import.meta.env.DEV
+        ? staticProducts
+        : [];
 
   const activeGroup = useMemo(
     () => groups.find((g) => g.id === activeRootId) ?? null,
@@ -242,14 +259,40 @@ export default function FeaturedProducts() {
           </motion.div>
         )}
 
-        <motion.div
-          className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8"
-          layout
-        >
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} onViewDetails={handleViewDetails} />
-          ))}
-        </motion.div>
+        {catalogLoadState === 'loading' ? (
+          <div
+            className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8"
+            aria-busy="true"
+            aria-label="Loading products"
+          >
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="aspect-[3/4] animate-pulse rounded-2xl border border-[#2C2C2C] bg-[#1a1a1a]"
+              />
+            ))}
+          </div>
+        ) : filteredProducts.length > 0 ? (
+          <motion.div
+            className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8"
+            layout
+          >
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onViewDetails={handleViewDetails}
+              />
+            ))}
+          </motion.div>
+        ) : (
+          <p
+            className="text-center text-sm text-[#F0EDE8]/60 py-12"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}
+          >
+            No products to show right now.
+          </p>
+        )}
 
         <ProductDetail
           product={selectedProduct}

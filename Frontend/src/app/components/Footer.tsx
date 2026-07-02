@@ -361,7 +361,7 @@ export default function Footer() {
               >
                 <Heart className="w-4 h-4 text-[#C0392B] fill-[#C0392B]" />
               </motion.span>
-              for rebels.
+            
             </motion.p>
 
             {/* Payment/Trust Badges */}

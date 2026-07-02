@@ -42,13 +42,41 @@ export function getListenPort(config: ConfigService): number {
   }
 }
 
+/** Add www / non-www companion so mobile bookmarks and redirects still pass CORS. */
+function expandOriginVariants(origin: string): string[] {
+  try {
+    const u = new URL(origin);
+    const host = u.hostname;
+    const port = u.port ? `:${u.port}` : '';
+    const base = `${u.protocol}//`;
+    const variants = [origin];
+    if (host.startsWith('www.')) {
+      variants.push(`${base}${host.slice(4)}${port}`);
+    } else if (
+      host !== 'localhost' &&
+      !/^\d{1,3}(\.\d{1,3}){3}$/.test(host)
+    ) {
+      variants.push(`${base}www.${host}${port}`);
+    }
+    return variants;
+  } catch {
+    return [origin];
+  }
+}
+
 export function getCorsOrigins(config: ConfigService): string[] {
   const legacy = config.get<string>('CORS_ORIGIN');
   const fromLegacy = legacy
     ? legacy.split(',').map((o) => o.trim()).filter(Boolean)
     : [];
   const fromFrontend = getFrontendPath(config);
-  return [...new Set([...fromLegacy, fromFrontend])];
+  return [
+    ...new Set(
+      [...fromLegacy, fromFrontend].flatMap((origin) =>
+        expandOriginVariants(origin),
+      ),
+    ),
+  ];
 }
 
 export function logPathConfig(config: ConfigService): void {
