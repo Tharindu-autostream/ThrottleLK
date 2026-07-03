@@ -1,7 +1,7 @@
 
-  # E-commerce website Throttle LK
+  #Throttle LK
 
-  This is a code bundle for E-commerce website Throttle LK. The original project is available at https://www.figma.com/design/e18X67w78Z0ObURGucHxVw/E-commerce-website-Throttle-LK.
+  This is a code bundle for Throttle LK. The original project is available at https://www.figma.com/design/e18X67w78Z0ObURGucHxVw/ThrottleLK.
 
   ## Running the code
 

@@ -7,6 +7,7 @@ import FeaturedProducts from './components/FeaturedProducts';
 import MotorGarage from './components/MotorGarage';
 import About from './components/About';
 import Testimonials from './components/Testimonials';
+import FAQ from './components/FAQ';
 import Newsletter from './components/Newsletter';
 import Footer from './components/Footer';
 import CartDrawer from './components/CartDrawer';
@@ -40,6 +41,7 @@ export default function App() {
       <MotorGarage />
       <About />
       <Testimonials />
+      <FAQ />
       <Newsletter />
       <Footer />
       <CartDrawer />

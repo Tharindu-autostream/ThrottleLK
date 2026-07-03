@@ -46,10 +46,10 @@ export default function Footer() {
   ];
 
   const support = [
-    { name: 'Shipping & Delivery', href: '#' },
-    { name: 'Returns & Exchanges', href: '#' },
-    { name: 'Size Guide', href: '#' },
-    { name: 'FAQ', href: '#' },
+    { name: 'Shipping & Delivery', href: '#faq' },
+    { name: 'Returns & Exchanges', href: '#faq' },
+    { name: 'Size Guide', href: '#faq' },
+    { name: 'FAQ', href: '#faq' },
   ];
 
   const contact = [

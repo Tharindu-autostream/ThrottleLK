@@ -91,6 +91,77 @@
         }
       </script>
 
+      <!--
+        Kept in sync by hand with FAQ_ITEMS in src/app/components/FAQ.tsx.
+        Duplicated here (rather than injected by useDocumentHead) so answer
+        engines that don't execute JavaScript (GPTBot, ClaudeBot, PerplexityBot)
+        can still read it straight from the static HTML.
+      -->
+      <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is Throttle LK?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Throttle LK is a streetwear and rider culture brand based in Colombo, Sri Lanka, known for bold, oversized hoodies and t-shirts built for people who refuse to blend in."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does Throttle LK deliver island-wide in Sri Lanka?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Throttle LK delivers to every district in Sri Lanka for a flat island-wide delivery fee of LKR 450, added at checkout."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How do I place an order and what payment methods are accepted?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Add items to your cart and check out on the website. Orders are confirmed via WhatsApp — you'll send us your order, we'll reply with our bank details, and you confirm with a deposit slip."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What sizes are available for Throttle LK hoodies and t-shirts?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Most Throttle LK products are available from S to XXL. Exact sizing can vary slightly by drop, so check the size options listed on each product page."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is Throttle LK adding motorbike parts and riders' accessories?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Throttle LK is expanding beyond streetwear into \"Motor Garage\" — a new line of modified motorbike parts and riders' accessories for Sri Lanka's bike culture. Subscribe to the newsletter to be notified when it launches."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Where is Throttle LK based?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Throttle LK is based in Colombo, Sri Lanka."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How can I contact Throttle LK for support?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "You can reach Throttle LK via WhatsApp directly from the checkout page, or through our Facebook and TikTok pages linked in the footer."
+              }
+            }
+          ]
+        }
+      </script>
+
       <style>html, body { height: 100%; margin: 0; } #root { height: 100%; }</style>
     </head>
 
