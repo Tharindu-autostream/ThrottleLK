@@ -154,7 +154,7 @@ function FloatingImage({ image, index }: { image: SiteGalleryImage; index: numbe
         >
           <motion.img
             src={image.url}
-            alt={image.title}
+            alt={`${image.title} — Throttle LK streetwear, Sri Lanka`}
             className="w-full h-full object-cover"
             style={{
               scale: useTransform(mouseX, [-0.5, 0.5], [1, 1.1]),
@@ -552,7 +552,7 @@ export default function About() {
               >
                 <motion.img
                   src={aboutFeaturedImage}
-                  alt="Throttle LK Brand"
+                  alt="Throttle LK streetwear brand story — premium hoodies made in Colombo, Sri Lanka"
                   className="w-full h-auto"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/60 to-transparent" />

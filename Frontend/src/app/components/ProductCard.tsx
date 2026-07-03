@@ -37,7 +37,7 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
       <div className="relative aspect-[3/4] overflow-hidden">
         <img
           src={product.image}
-          alt={product.name}
+          alt={`${product.name} — ${product.category} | Throttle LK`}
           className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
         />
 

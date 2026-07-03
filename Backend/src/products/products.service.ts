@@ -9,8 +9,12 @@ import {
   DEFAULT_PRODUCT_STOCK,
 } from './product-defaults';
 import { Product } from './product.entity';
+import { buildProductSlug } from './slug.util';
 
 export const MAX_PRODUCT_IMAGES = 5;
+
+/** Product plus a computed, non-persisted SEO-friendly slug. */
+export type ProductWithSlug = Product & { slug: string };
 
 export type ProductUpsertFields = Pick<
   Product,
@@ -54,7 +58,7 @@ export class ProductsService {
     private readonly products: Repository<Product>,
   ) {}
 
-  private normalize(p: Product): Product {
+  private normalize(p: Product): ProductWithSlug {
     const images =
       Array.isArray(p.images) && p.images.length > 0
         ? p.images.filter((u) => typeof u === 'string' && u.trim().length > 0)
@@ -64,6 +68,7 @@ export class ProductsService {
     const image = (p.image?.trim() || images[0] || '').trim();
     return {
       ...p,
+      slug: buildProductSlug(p.name, p.id),
       image,
       images: images.length > 0 ? images : image ? [image] : [],
       description:
@@ -91,15 +96,22 @@ export class ProductsService {
     };
   }
 
-  findAll(): Promise<Product[]> {
+  findAll(): Promise<ProductWithSlug[]> {
     return this.products
       .find({ order: { id: 'ASC' } })
       .then((rows) => rows.map((r) => this.normalize(r)));
   }
 
-  async findOne(id: string): Promise<Product | null> {
+  async findOne(id: string): Promise<ProductWithSlug | null> {
     const row = await this.products.findOne({ where: { id } });
     return row ? this.normalize(row) : null;
+  }
+
+  /** Looks up a product by its computed slug (see `slug.util.ts`). */
+  async findBySlug(slug: string): Promise<ProductWithSlug | null> {
+    const rows = await this.products.find();
+    const match = rows.find((r) => buildProductSlug(r.name, r.id) === slug);
+    return match ? this.normalize(match) : null;
   }
 
   countByCategory(category: string): Promise<number> {
@@ -111,7 +123,7 @@ export class ProductsService {
     await this.products.update({ category: from }, { category: to });
   }
 
-  create(data: Partial<ProductUpsertFields>): Promise<Product> {
+  create(data: Partial<ProductUpsertFields>): Promise<ProductWithSlug> {
     const id = randomUUID();
     const description = (data.description ?? '').trim();
     const specifications =
@@ -155,7 +167,7 @@ export class ProductsService {
   async update(
     id: string,
     patch: Partial<ProductUpsertFields>,
-  ): Promise<Product | null> {
+  ): Promise<ProductWithSlug | null> {
     const existing = await this.products.findOne({ where: { id } });
     if (!existing) {
       return null;

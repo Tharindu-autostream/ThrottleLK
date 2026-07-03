@@ -11,8 +11,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { Product } from '../products/product.entity';
-import { ProductsService } from '../products/products.service';
+import { ProductsService, ProductWithSlug } from '../products/products.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -23,12 +22,12 @@ export class AdminProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  findAll(): Promise<Product[]> {
+  findAll(): Promise<ProductWithSlug[]> {
     return this.productsService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Product> {
+  async findOne(@Param('id') id: string): Promise<ProductWithSlug> {
     const product = await this.productsService.findOne(id);
     if (!product) {
       throw new NotFoundException(`Product ${id} not found`);
@@ -37,7 +36,7 @@ export class AdminProductsController {
   }
 
   @Post()
-  create(@Body() dto: CreateProductDto): Promise<Product> {
+  create(@Body() dto: CreateProductDto): Promise<ProductWithSlug> {
     if (!dto.image?.trim() && !(dto.images?.length ?? 0)) {
       throw new BadRequestException('At least one product image is required');
     }
@@ -48,7 +47,7 @@ export class AdminProductsController {
   async update(
     @Param('id') id: string,
     @Body() dto: UpdateProductDto,
-  ): Promise<Product> {
+  ): Promise<ProductWithSlug> {
     const product = await this.productsService.update(id, dto);
     if (!product) {
       throw new NotFoundException(`Product ${id} not found`);

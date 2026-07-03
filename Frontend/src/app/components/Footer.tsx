@@ -39,6 +39,7 @@ export default function Footer() {
 
   const quickLinks = [
     { name: 'Collections', href: '#shop' },
+    { name: 'Motor Garage', href: '#motor-garage' },
     { name: 'About Us', href: '#about' },
     { name: 'Testimonials', href: '#testimonials' },
     { name: 'Newsletter', href: '#newsletter' },

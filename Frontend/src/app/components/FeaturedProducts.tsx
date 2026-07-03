@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'motion/react';
+import { useLocation, useNavigate } from 'react-router';
 import ProductCard from './ProductCard';
-import ProductDetail from './ProductDetail';
 import { products as staticProducts } from './products';
 import { Product } from './CartContext';
 import { apiUrl } from '../../lib/api';
 import { parseProductFromApi } from '../../lib/productDisplayDefaults';
+import { buildProductSlug } from '../../lib/slug';
 
 import {
   FALLBACK_CATEGORY_GROUPS,
@@ -14,12 +15,12 @@ import {
 } from '../../lib/categories';
 
 export default function FeaturedProducts() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [groups, setGroups] = useState<CategoryGroup[]>(FALLBACK_CATEGORY_GROUPS);
   const [activeRootId, setActiveRootId] = useState<string>('all');
   /** Within a parent that has children: 'all' or a leaf category name */
   const [activeLeaf, setActiveLeaf] = useState<string>('all');
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [catalog, setCatalog] = useState<Product[]>([]);
   const [catalogLoadState, setCatalogLoadState] = useState<
     'loading' | 'ready' | 'error'
@@ -119,14 +120,15 @@ export default function FeaturedProducts() {
     setActiveLeaf('all');
   };
 
+  /**
+   * Pushes a real, shareable `/product/:slug` URL (with the current page kept
+   * as `backgroundLocation`, see main.tsx) so the quick-view modal opens on top
+   * — direct visits/refreshes to that same URL render the full ProductPage.
+   */
   const handleViewDetails = (product: Product) => {
-    setSelectedProduct(product);
-    setIsDetailOpen(true);
-  };
-
-  const handleCloseDetails = () => {
-    setIsDetailOpen(false);
-    setTimeout(() => setSelectedProduct(null), 300);
+    navigate(`/product/${buildProductSlug(product.name, product.id)}`, {
+      state: { backgroundLocation: location },
+    });
   };
 
   const showSubRow =
@@ -293,12 +295,6 @@ export default function FeaturedProducts() {
             No products to show right now.
           </p>
         )}
-
-        <ProductDetail
-          product={selectedProduct}
-          isOpen={isDetailOpen}
-          onClose={handleCloseDetails}
-        />
       </div>
     </section>
   );

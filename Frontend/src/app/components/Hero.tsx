@@ -120,7 +120,7 @@ export default function Hero() {
         >
           <img
             src={heroImage}
-            alt="Hero hoodie"
+            alt="Throttle LK premium streetwear hoodie — Sri Lanka's bold urban fashion brand"
             className="w-full h-full object-cover"
           />
         </motion.div>
@@ -150,7 +150,7 @@ export default function Hero() {
         style={{ y, willChange: 'transform' }}
       >
         {/* Main Title with Letter Animation */}
-        <div className="mb-6 overflow-hidden">
+        <h1 className="m-0 mb-6 overflow-hidden font-normal">
           <motion.div className="flex justify-center gap-2 md:gap-4 flex-wrap">
             {title.split('').map((char, i) => (
               <motion.span
@@ -175,7 +175,7 @@ export default function Hero() {
               </motion.span>
             ))}
           </motion.div>
-        </div>
+        </h1>
 
         {/* Animated Divider */}
         <motion.div className="flex items-center gap-4 mb-8">

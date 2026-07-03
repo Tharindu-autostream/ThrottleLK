@@ -4,6 +4,7 @@ import { FolderOpen, Image, LogOut, Package, ShoppingBag } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { ADMIN_OUTLINE_BUTTON_CLASS } from './adminButtonStyles';
 import { useAdminAuth } from './AdminAuthContext';
+import { useDocumentHead } from '../../lib/useDocumentHead';
 
 const navItems = [
   { to: '/admin/products', label: 'Products', icon: Package },
@@ -13,6 +14,11 @@ const navItems = [
 ] as const;
 
 export default function AdminLayout() {
+  useDocumentHead({
+    title: 'Admin | Throttle LK',
+    robots: 'noindex, nofollow',
+  });
+
   const { token, logout } = useAdminAuth();
   const location = useLocation();
 

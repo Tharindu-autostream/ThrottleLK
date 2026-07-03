@@ -8,6 +8,7 @@ import type { CartItem } from './CartContext';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import CustomCursor from './CustomCursor';
+import { useDocumentHead } from '../../lib/useDocumentHead';
 
 const SHIPPING_FEE = 450;
 const BACKEND = import.meta.env.VITE_BACKEND_PATH ?? 'http://localhost:3000';
@@ -702,6 +703,11 @@ function CheckoutInner() {
 }
 
 export default function CheckoutPage() {
+  useDocumentHead({
+    title: 'Checkout | Throttle LK',
+    robots: 'noindex, nofollow',
+  });
+
   return (
     <PayPalScriptProvider
       options={{

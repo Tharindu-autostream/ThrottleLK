@@ -21,9 +21,10 @@ export class CategorySeedService implements OnModuleInit {
     if (count === 0) {
       await this.seedFreshTree();
       this.logger.log('Seeded default category tree');
-    } else {
-      await this.ensureHoodieParentForLegacyRows();
+      return;
     }
+    await this.ensureHoodieParentForLegacyRows();
+    await this.ensureDefaultRootsExist();
   }
 
   private async seedFreshTree(): Promise<void> {
@@ -83,5 +84,40 @@ export class CategorySeedService implements OnModuleInit {
     this.logger.log(
       `Attached ${legacyChildren.length} legacy categories under "Hoodie"`,
     );
+  }
+
+  /**
+   * Adds any root (and its children) from `DEFAULT_CATEGORY_TREE` that doesn't exist
+   * yet, without touching existing rows. Lets us introduce new default categories
+   * (e.g. an upcoming product line) that automatically appear on already-seeded
+   * databases the next time the backend restarts.
+   */
+  private async ensureDefaultRootsExist(): Promise<void> {
+    for (const root of DEFAULT_CATEGORY_TREE) {
+      const existing = await this.categories.findOne({
+        where: { name: root.name },
+      });
+      if (existing) {
+        continue;
+      }
+      const rootRow = this.categories.create({
+        id: randomUUID(),
+        name: root.name,
+        sortOrder: root.sortOrder,
+        parentId: null,
+      });
+      await this.categories.save(rootRow);
+      for (const child of root.children) {
+        await this.categories.save(
+          this.categories.create({
+            id: randomUUID(),
+            name: child.name,
+            sortOrder: child.sortOrder,
+            parentId: rootRow.id,
+          }),
+        );
+      }
+      this.logger.log(`Added new default root category "${root.name}"`);
+    }
   }
 }

@@ -2,6 +2,7 @@ import { FormEvent, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { apiFetch } from '../../lib/api';
+import { useDocumentHead } from '../../lib/useDocumentHead';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -15,6 +16,11 @@ import {
 import { useAdminAuth } from './AdminAuthContext';
 
 export default function AdminLoginPage() {
+  useDocumentHead({
+    title: 'Admin Login | Throttle LK',
+    robots: 'noindex, nofollow',
+  });
+
   const { token, setToken } = useAdminAuth();
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
