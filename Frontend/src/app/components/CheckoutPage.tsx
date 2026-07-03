@@ -20,7 +20,7 @@ const PAYPAL_ENABLED = false;
 // Merchant WhatsApp Business number in international format, digits only
 // (e.g. 94771234567 for Sri Lanka). Set VITE_WHATSAPP_NUMBER in your .env.
 const WHATSAPP_NUMBER = (
-  (import.meta.env.VITE_WHATSAPP_NUMBER as string | undefined) ?? '94770000000'
+  (import.meta.env.VITE_WHATSAPP_NUMBER as string | undefined) ?? '94727707597'
 ).replace(/[^0-9]/g, '');
 
 const SRI_LANKA_DISTRICTS = [
