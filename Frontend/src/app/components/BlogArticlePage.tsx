@@ -52,6 +52,7 @@ export default function BlogArticlePage() {
       headline: article.title,
       description: article.excerpt,
       datePublished: article.publishedAt,
+      ...(article.coverImage ? { image: [article.coverImage] } : {}),
       author: {
         '@type': 'Organization',
         name: article.authorName,
@@ -72,6 +73,7 @@ export default function BlogArticlePage() {
     description: article?.excerpt,
     canonicalPath: article ? `/blog/${article.slug}` : undefined,
     ogType: 'article',
+    ogImage: article?.coverImage ?? undefined,
     jsonLd,
   });
 
@@ -110,6 +112,13 @@ export default function BlogArticlePage() {
           >
             {article.title}
           </h1>
+          {article.coverImage ? (
+            <img
+              src={article.coverImage}
+              alt=""
+              className="mb-8 aspect-video w-full object-cover"
+            />
+          ) : null}
           <p className="mb-10 text-lg leading-relaxed text-[#F0EDE8]/65">
             {article.excerpt}
           </p>

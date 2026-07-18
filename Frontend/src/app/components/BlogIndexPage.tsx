@@ -75,29 +75,49 @@ export default function BlogIndexPage() {
       <ul className="space-y-10">
         {articles.map((article) => (
           <li key={article.id} className="border-b border-[#2C2C2C] pb-10">
-            <p className="mb-2 text-xs text-[#F0EDE8]/40">
-              {formatArticleDate(article.publishedAt)} · {article.authorName}
-            </p>
-            <h2
-              className="mb-3 text-3xl tracking-wide text-[#F0EDE8]"
-              style={{ fontFamily: "'Bebas Neue', sans-serif" }}
-            >
-              <Link
-                to={`/blog/${article.slug}`}
-                className="hover:text-[#C0392B]"
-              >
-                {article.title}
-              </Link>
-            </h2>
-            <p className="mb-4 text-[#F0EDE8]/70 leading-relaxed">
-              {article.excerpt}
-            </p>
-            <Link
-              to={`/blog/${article.slug}`}
-              className="text-sm text-[#C0392B] underline underline-offset-2"
-            >
-              Read article
-            </Link>
+            <div className="flex flex-col gap-5 sm:flex-row sm:gap-6">
+              {article.coverImage ? (
+                <Link
+                  to={`/blog/${article.slug}`}
+                  className="block w-full shrink-0 overflow-hidden sm:w-44"
+                  aria-hidden
+                  tabIndex={-1}
+                >
+                  <img
+                    src={article.coverImage}
+                    alt=""
+                    className="aspect-video w-full object-cover sm:aspect-square"
+                    loading="lazy"
+                  />
+                </Link>
+              ) : null}
+              <div className="min-w-0 flex-1">
+                <p className="mb-2 text-xs text-[#F0EDE8]/40">
+                  {formatArticleDate(article.publishedAt)} ·{' '}
+                  {article.authorName}
+                </p>
+                <h2
+                  className="mb-3 text-3xl tracking-wide text-[#F0EDE8]"
+                  style={{ fontFamily: "'Bebas Neue', sans-serif" }}
+                >
+                  <Link
+                    to={`/blog/${article.slug}`}
+                    className="hover:text-[#C0392B]"
+                  >
+                    {article.title}
+                  </Link>
+                </h2>
+                <p className="mb-4 text-[#F0EDE8]/70 leading-relaxed">
+                  {article.excerpt}
+                </p>
+                <Link
+                  to={`/blog/${article.slug}`}
+                  className="text-sm text-[#C0392B] underline underline-offset-2"
+                >
+                  Read article
+                </Link>
+              </div>
+            </div>
           </li>
         ))}
       </ul>

@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Pencil, Plus, Trash2 } from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { ImagePlus, Pencil, Plus, Trash2, X } from 'lucide-react';
 import { toast } from 'sonner';
-import { apiFetch } from '../../lib/api';
+import { apiFetch, uploadProductImages } from '../../lib/api';
 import { parseArticle, type Article } from '../../lib/articles';
 import { ADMIN_OUTLINE_BUTTON_CLASS } from './adminButtonStyles';
 import { useAdminAuth } from './AdminAuthContext';
@@ -47,9 +47,14 @@ export default function AdminArticlesPage() {
   const [excerpt, setExcerpt] = useState('');
   const [body, setBody] = useState('');
   const [coverImage, setCoverImage] = useState('');
+  const [coverPending, setCoverPending] = useState<File | null>(null);
   const [authorName, setAuthorName] = useState('Throttle LK');
   const [status, setStatus] = useState<'draft' | 'published'>('draft');
   const [saving, setSaving] = useState(false);
+  const coverInputRef = useRef<HTMLInputElement>(null);
+  const coverPreview = coverPending
+    ? URL.createObjectURL(coverPending)
+    : coverImage;
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -84,6 +89,7 @@ export default function AdminArticlesPage() {
     setExcerpt('');
     setBody('');
     setCoverImage('');
+    setCoverPending(null);
     setAuthorName('Throttle LK');
     setStatus('draft');
     setDialogOpen(true);
@@ -96,9 +102,22 @@ export default function AdminArticlesPage() {
     setExcerpt(a.excerpt);
     setBody(a.body);
     setCoverImage(a.coverImage ?? '');
+    setCoverPending(null);
     setAuthorName(a.authorName);
     setStatus(a.status);
     setDialogOpen(true);
+  }
+
+  function onCoverPick(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    setCoverPending(file);
+  }
+
+  function clearCover() {
+    setCoverImage('');
+    setCoverPending(null);
   }
 
   async function saveArticle() {
@@ -108,17 +127,24 @@ export default function AdminArticlesPage() {
       toast.error('Title, excerpt, and body (50+ chars) are required');
       return;
     }
-    const payload = {
-      title: trimmedTitle,
-      slug: slug.trim() || undefined,
-      excerpt: trimmedExcerpt,
-      body,
-      coverImage: coverImage.trim() || null,
-      authorName: authorName.trim() || 'Throttle LK',
-      status,
-    };
     setSaving(true);
     try {
+      let nextCover = coverImage.trim() || null;
+      if (coverPending) {
+        const uploaded = await uploadProductImages([coverPending], token);
+        const url = uploaded[0];
+        if (!url) throw new Error('Cover image upload failed');
+        nextCover = url;
+      }
+      const payload = {
+        title: trimmedTitle,
+        slug: slug.trim() || undefined,
+        excerpt: trimmedExcerpt,
+        body,
+        coverImage: nextCover,
+        authorName: authorName.trim() || 'Throttle LK',
+        status,
+      };
       const path = editing
         ? `/admin/articles/${editing.id}`
         : '/admin/articles';
@@ -292,14 +318,54 @@ export default function AdminArticlesPage() {
                 rows={12}
               />
             </div>
-            <div>
-              <Label htmlFor="art-cover">Cover image URL</Label>
-              <Input
-                id="art-cover"
-                value={coverImage}
-                onChange={(e) => setCoverImage(e.target.value)}
-                className="mt-1 border-[#2C2C2C] bg-[#1a1a1a]"
-              />
+            <div className="space-y-2">
+              <Label>Cover image</Label>
+              <div className="flex flex-col sm:flex-row gap-4 items-start">
+                <div className="relative w-full sm:w-64 aspect-video rounded-md overflow-hidden border border-[#2C2C2C] bg-[#0A0A0A]">
+                  {coverPreview ? (
+                    <img
+                      src={coverPreview}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  ) : null}
+                  {coverImage || coverPending ? (
+                    <button
+                      type="button"
+                      onClick={clearCover}
+                      className="absolute top-2 right-2 rounded-full bg-[#0A0A0A]/80 p-1.5 text-[#F0EDE8] hover:text-[#C0392B]"
+                      aria-label="Remove cover image"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  ) : null}
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className={ADMIN_OUTLINE_BUTTON_CLASS}
+                    onClick={() => coverInputRef.current?.click()}
+                  >
+                    <ImagePlus className="w-4 h-4" />
+                    {coverImage || coverPending
+                      ? 'Replace image'
+                      : 'Upload image'}
+                  </Button>
+                  <input
+                    ref={coverInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                    className="hidden"
+                    onChange={onCoverPick}
+                  />
+                  <p className="text-xs text-[#F0EDE8]/50 max-w-sm">
+                    JPEG, PNG, WebP, or GIF. Delivered via{' '}
+                    <code className="text-[#F0EDE8]/70">Cloudinary CDN</code>{' '}
+                    (auto-optimized).
+                  </p>
+                </div>
+              </div>
             </div>
             <div>
               <Label htmlFor="art-author">Author</Label>
