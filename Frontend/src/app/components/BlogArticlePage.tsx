@@ -116,7 +116,7 @@ export default function BlogArticlePage() {
             <img
               src={article.coverImage}
               alt=""
-              className="mb-8 aspect-video w-full object-cover"
+              className="mb-8 h-auto w-full"
             />
           ) : null}
           <p className="mb-10 text-lg leading-relaxed text-[#F0EDE8]/65">

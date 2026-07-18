@@ -79,14 +79,14 @@ export default function BlogIndexPage() {
               {article.coverImage ? (
                 <Link
                   to={`/blog/${article.slug}`}
-                  className="block w-full shrink-0 overflow-hidden sm:w-44"
+                  className="block w-full shrink-0 sm:w-56"
                   aria-hidden
                   tabIndex={-1}
                 >
                   <img
                     src={article.coverImage}
                     alt=""
-                    className="aspect-video w-full object-cover sm:aspect-square"
+                    className="h-auto w-full"
                     loading="lazy"
                   />
                 </Link>
