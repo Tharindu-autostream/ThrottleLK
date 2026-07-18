@@ -80,7 +80,25 @@ async function fetchProducts() {
     console.warn(
       `[generate-sitemap] Could not fetch products from ${backendPath}/products (${
         err instanceof Error ? err.message : String(err)
-      }). Generating a sitemap with just the homepage.`,
+      }). Continuing without product URLs.`,
+    );
+    return [];
+  }
+}
+
+async function fetchArticles() {
+  try {
+    const res = await fetch(`${backendPath}/articles`, {
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!res.ok) throw new Error(`bad status ${res.status}`);
+    const rows = await res.json();
+    return Array.isArray(rows) ? rows : [];
+  } catch (err) {
+    console.warn(
+      `[generate-sitemap] Could not fetch articles from ${backendPath}/articles (${
+        err instanceof Error ? err.message : String(err)
+      }). Using static journal paths if any.`,
     );
     return [];
   }
@@ -98,10 +116,46 @@ function urlEntry(loc, { changefreq = 'weekly', priority = '0.6' } = {}) {
   ].join('\n');
 }
 
-const products = await fetchProducts();
+const FALLBACK_ARTICLE_SLUGS = [
+  'oversized-hoodie-fit-guide-sri-lanka',
+  'care-premium-hoodies-humid-climate',
+  'colombo-streetwear-culture-local-brands',
+  'island-wide-delivery-throttle-lk',
+  'beginner-rider-gear-basics-sri-lanka',
+  'streetwear-colours-sri-lanka-light',
+];
+
+const [products, articles] = await Promise.all([fetchProducts(), fetchArticles()]);
+
+const staticPages = [
+  { path: '/', changefreq: 'daily', priority: '1.0' },
+  { path: '/about', changefreq: 'monthly', priority: '0.8' },
+  { path: '/contact', changefreq: 'monthly', priority: '0.8' },
+  { path: '/privacy', changefreq: 'yearly', priority: '0.5' },
+  { path: '/terms', changefreq: 'yearly', priority: '0.5' },
+  { path: '/blog', changefreq: 'weekly', priority: '0.9' },
+];
+
+const articleSlugs =
+  articles.length > 0
+    ? articles
+        .filter((a) => a && typeof a.slug === 'string' && a.slug.length > 0)
+        .map((a) => a.slug)
+    : FALLBACK_ARTICLE_SLUGS;
 
 const urls = [
-  urlEntry(`${frontendPath}/`, { changefreq: 'daily', priority: '1.0' }),
+  ...staticPages.map((p) =>
+    urlEntry(`${frontendPath}${p.path === '/' ? '/' : p.path}`, {
+      changefreq: p.changefreq,
+      priority: p.priority,
+    }),
+  ),
+  ...articleSlugs.map((slug) =>
+    urlEntry(`${frontendPath}/blog/${slug}`, {
+      changefreq: 'monthly',
+      priority: '0.7',
+    }),
+  ),
   ...products
     .filter((p) => p && typeof p.slug === 'string' && p.slug.length > 0)
     .map((p) =>

@@ -1,28 +1,28 @@
 import { motion } from 'motion/react';
 import { Bike, Wrench, ShieldCheck, Bell } from 'lucide-react';
+import { Link } from 'react-router';
 
 const pillars = [
   {
     icon: Wrench,
     title: 'Modified Parts',
-    desc: 'Performance upgrades and modified components built for your ride.',
+    desc: 'Performance upgrades and modified components chosen for Sri Lanka riding conditions — not just showroom cosmetics.',
   },
   {
     icon: ShieldCheck,
     title: 'Riding Accessories',
-    desc: "Helmets, gloves, and protective gear made for Sri Lanka's roads.",
+    desc: "Helmets, gloves, and protective gear that fit daily commuting, weekend runs, and island weather swings.",
   },
   {
     icon: Bike,
     title: 'Rider Culture',
-    desc: "Curated for Sri Lanka's motorbike community — riders, by riders.",
+    desc: "Built with the same street attitude as our hoodies — for riders who live the bike, not only pose with it.",
   },
 ];
 
 /**
- * Homepage teaser for the upcoming motorbike modified-parts & riders'-accessories
- * line. Gives Google real, crawlable on-page content to match the "motor parts"
- * / "riders accessories" keywords in index.html, ahead of the catalog going live.
+ * Homepage section for the motorbike modified-parts & riders'-accessories
+ * line. Substantial copy so it is not a hollow "coming soon" stub for AdSense.
  */
 export default function MotorGarage() {
   return (
@@ -47,7 +47,7 @@ export default function MotorGarage() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: false, amount: 0.5 }}
           >
-            Coming Soon
+            Expanding soon
           </motion.span>
           <h2
             className="mb-4 text-5xl tracking-wider text-[#F0EDE8] sm:text-6xl"
@@ -68,10 +68,27 @@ export default function MotorGarage() {
           >
             Throttle LK is expanding beyond streetwear into{' '}
             <span className="text-[#C0392B]">modified motorbike parts</span> and{' '}
-            <span className="text-[#C0392B]">riders&apos; accessories</span> — built for
-            Sri Lanka&apos;s bike culture. Be first to know when the garage opens.
+            <span className="text-[#C0392B]">riders&apos; accessories</span> —
+            curated for how people actually ride in Sri Lanka: mixed traffic,
+            humidity, monsoon showers, and long island distances.
           </p>
         </motion.div>
+
+        <div className="mx-auto mb-12 max-w-3xl space-y-4 text-left text-sm leading-relaxed text-[#F0EDE8]/65 md:text-base">
+          <p>
+            In Sri Lanka a bike is often daily transport, not a weekend toy.
+            Motor Garage will focus on upgrades and accessories that respect
+            that reality — braking, visibility, comfort, and durable style —
+            alongside the graphic streetwear already in the shop.
+          </p>
+          <p>
+            Until the catalogue opens, read our{' '}
+            <Link to="/blog/beginner-rider-gear-basics-sri-lanka" className="text-[#C0392B] underline underline-offset-2">
+              beginner rider gear guide
+            </Link>{' '}
+            and subscribe below so you are first in line when drops go live.
+          </p>
+        </div>
 
         <div className="mb-12 grid gap-6 sm:grid-cols-3">
           {pillars.map(({ icon: Icon, title, desc }, i) => (

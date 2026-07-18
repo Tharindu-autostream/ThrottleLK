@@ -3,11 +3,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import type { StringValue } from 'ms';
+import { ArticlesModule } from '../articles/articles.module';
 import { CategoriesModule } from '../categories/categories.module';
 import { OrdersModule } from '../orders/orders.module';
 import { ProductsModule } from '../products/products.module';
 import { SiteModule } from '../site/site.module';
 import { UsersModule } from '../users/users.module';
+import { AdminArticlesController } from './admin-articles.controller';
 import { AdminAuthController } from './admin-auth.controller';
 import { AdminAuthService } from './admin-auth.service';
 import { AdminCategoriesController } from './admin-categories.controller';
@@ -36,6 +38,7 @@ import { JwtStrategy } from './jwt.strategy';
     SiteModule,
     UsersModule,
     OrdersModule,
+    ArticlesModule,
   ],
   controllers: [
     AdminAuthController,
@@ -44,6 +47,7 @@ import { JwtStrategy } from './jwt.strategy';
     AdminCategoriesController,
     AdminSiteContentController,
     AdminOrdersController,
+    AdminArticlesController,
   ],
   providers: [AdminAuthService, JwtStrategy],
 })

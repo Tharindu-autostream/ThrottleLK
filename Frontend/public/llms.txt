@@ -11,8 +11,14 @@
 - Delivery: Island-wide across Sri Lanka, flat fee of LKR 450
 - Ordering: Add to cart on the website, checkout is confirmed via WhatsApp + bank transfer
 - Social: [Facebook](https://www.facebook.com/share/18qA9nBdVh/?mibextid=wwXIfr), [TikTok](https://www.tiktok.com/@throttle_lk)
+- Contact: info@throttlelk.com · +94 72 770 7597
 
 ## Pages
 
 - [Homepage](https://throttlelk.online/): Shop hoodies & t-shirts, brand story, FAQ, Motor Garage preview
-- [Sitemap](https://throttlelk.online/sitemap.xml): Full list of product pages
+- [Journal](https://throttlelk.online/blog): Streetwear and rider guides
+- [About](https://throttlelk.online/about): Brand story
+- [Contact](https://throttlelk.online/contact): Support channels
+- [Privacy Policy](https://throttlelk.online/privacy)
+- [Terms & Conditions](https://throttlelk.online/terms)
+- [Sitemap](https://throttlelk.online/sitemap.xml): Full list of product and journal pages

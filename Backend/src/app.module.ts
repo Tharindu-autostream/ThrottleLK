@@ -5,6 +5,7 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AdminModule } from './admin/admin.module';
+import { ArticlesModule } from './articles/articles.module';
 import { CategoriesModule } from './categories/categories.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { OrdersModule } from './orders/orders.module';
@@ -38,6 +39,7 @@ import { SiteModule } from './site/site.module';
     ProductsModule,
     CategoriesModule,
     SiteModule,
+    ArticlesModule,
     AdminModule,
     OrdersModule,
   ],

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, Navigate, Outlet, useLocation } from 'react-router';
-import { FolderOpen, Image, LogOut, Package, ShoppingBag } from 'lucide-react';
+import { FolderOpen, Image, LogOut, Newspaper, Package, ShoppingBag } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { ADMIN_OUTLINE_BUTTON_CLASS } from './adminButtonStyles';
 import { useAdminAuth } from './AdminAuthContext';
@@ -9,6 +9,7 @@ import { useDocumentHead } from '../../lib/useDocumentHead';
 const navItems = [
   { to: '/admin/products', label: 'Products', icon: Package },
   { to: '/admin/categories', label: 'Categories', icon: FolderOpen },
+  { to: '/admin/articles', label: 'Articles', icon: Newspaper },
   { to: '/admin/orders', label: 'Orders', icon: ShoppingBag },
   { to: '/admin/site-images', label: 'Site images', icon: Image },
 ] as const;

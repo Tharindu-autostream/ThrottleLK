@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { MouseEvent } from 'react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'motion/react';
 import { ShoppingBag, Menu, X } from 'lucide-react';
 import { useNavigate } from 'react-router';
@@ -13,7 +14,7 @@ export default function Navbar() {
   const { state, dispatch } = useCart();
   const navigate = useNavigate();
 
-  const goHome = (e: React.MouseEvent) => {
+  const goHome = (e: MouseEvent) => {
     e.preventDefault();
     setMobileMenuOpen(false);
     navigate('/');
@@ -36,11 +37,33 @@ export default function Navbar() {
     setScrolled(latest > 50);
   });
 
-  const navLinks = [
-    { name: 'Collections', href: '#shop' },
-    { name: 'About', href: '#about' },
-    { name: 'Contact', href: '#contact' },
+  const navLinks: { name: string; href: string; route?: boolean }[] = [
+    { name: 'Collections', href: '/#shop' },
+    { name: 'Journal', href: '/blog', route: true },
+    { name: 'About', href: '/about', route: true },
+    { name: 'Contact', href: '/contact', route: true },
   ];
+
+  const handleNavClick = (
+    e: MouseEvent,
+    link: { href: string; route?: boolean },
+  ) => {
+    setMobileMenuOpen(false);
+    if (link.route) {
+      e.preventDefault();
+      navigate(link.href);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    if (link.href.startsWith('/#')) {
+      e.preventDefault();
+      const hash = link.href.slice(1);
+      navigate('/');
+      setTimeout(() => {
+        document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  };
 
   return (
     <motion.nav
@@ -85,6 +108,7 @@ export default function Navbar() {
               <motion.a
                 key={link.name}
                 href={link.href}
+                onClick={(e) => handleNavClick(e, link)}
                 className="relative px-4 py-2 text-[#F0EDE8] group"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}
                 initial={{ opacity: 0, y: -20 }}
@@ -201,7 +225,7 @@ export default function Navbar() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ delay: i * 0.1 }}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={(e) => handleNavClick(e, link)}
                   whileTap={{ scale: 0.98 }}
                 >
                   {link.name}

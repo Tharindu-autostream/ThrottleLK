@@ -1,6 +1,7 @@
-import { motion, useScroll, useTransform, useMotionTemplate } from 'motion/react';
-import { Instagram, Facebook, Send, MessageCircle, MapPin, Mail, Phone, ArrowRight, Heart } from 'lucide-react';
 import { useRef } from 'react';
+import type { MouseEvent } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
+import { Instagram, Facebook, Send, MessageCircle, MapPin, Mail, Phone, ArrowRight, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import logo from '../../imports/Gemini_Generated_Image_s1qapns1qapns1qa-removebg-preview.png';
 
@@ -38,25 +39,46 @@ export default function Footer() {
   ];
 
   const quickLinks = [
-    { name: 'Collections', href: '#shop' },
-    { name: 'Motor Garage', href: '#motor-garage' },
-    { name: 'About Us', href: '#about' },
-    { name: 'Testimonials', href: '#testimonials' },
-    { name: 'Newsletter', href: '#newsletter' },
+    { name: 'Collections', href: '/#shop', route: false },
+    { name: 'Journal', href: '/blog', route: true },
+    { name: 'About Us', href: '/about', route: true },
+    { name: 'Motor Garage', href: '/#motor-garage', route: false },
+    { name: 'Newsletter', href: '/#newsletter', route: false },
   ];
 
   const support = [
-    { name: 'Shipping & Delivery', href: '#faq' },
-    { name: 'Returns & Exchanges', href: '#faq' },
-    { name: 'Size Guide', href: '#faq' },
-    { name: 'FAQ', href: '#faq' },
+    { name: 'Contact', href: '/contact', route: true },
+    { name: 'Shipping & Delivery', href: '/#faq', route: false },
+    { name: 'Privacy Policy', href: '/privacy', route: true },
+    { name: 'Terms & Conditions', href: '/terms', route: true },
+    { name: 'FAQ', href: '/#faq', route: false },
   ];
 
   const contact = [
     { icon: Mail, text: 'info@throttlelk.com', href: 'mailto:info@throttlelk.com' },
-    { icon: Phone, text: '+94 72 770 7597', href: 'tel:+94771234567' },
-    { icon: MapPin, text: 'Colombo, Sri Lanka', href: '#' },
+    { icon: Phone, text: '+94 72 770 7597', href: 'tel:+94727707597' },
+    { icon: MapPin, text: 'Colombo, Sri Lanka', href: '/contact' },
   ];
+
+  const handleFooterNav = (
+    e: MouseEvent,
+    link: { href: string; route?: boolean },
+  ) => {
+    if (link.route) {
+      e.preventDefault();
+      navigate(link.href);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    if (link.href.startsWith('/#')) {
+      e.preventDefault();
+      const hash = link.href.slice(1);
+      navigate('/');
+      setTimeout(() => {
+        document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  };
 
   return (
     <footer 
@@ -216,6 +238,7 @@ export default function Footer() {
                 >
                   <motion.a
                     href={link.href}
+                    onClick={(e) => handleFooterNav(e, link)}
                     className="text-[#F0EDE8]/60 hover:text-[#C0392B] transition-colors inline-flex items-center gap-2 group"
                     style={{ fontFamily: "'DM Sans', sans-serif" }}
                     whileHover={{ x: 5 }}
@@ -265,6 +288,7 @@ export default function Footer() {
                 >
                   <motion.a
                     href={link.href}
+                    onClick={(e) => handleFooterNav(e, link)}
                     className="text-[#F0EDE8]/60 hover:text-[#C0392B] transition-colors inline-flex items-center gap-2 group"
                     style={{ fontFamily: "'DM Sans', sans-serif" }}
                     whileHover={{ x: 5 }}
@@ -341,29 +365,52 @@ export default function Footer() {
           transition={{ delay: 0.8 }}
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <motion.p
-              className="text-[#F0EDE8]/40 text-sm flex items-center gap-2"
-              style={{ fontFamily: "'DM Sans', sans-serif" }}
+            <motion.div
+              className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4"
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false }}
               transition={{ delay: 0.9 }}
             >
-              © 2026 Throttle LK. All rights reserved. Made with
-              <motion.span
-                animate={{
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
+              <p
+                className="text-[#F0EDE8]/40 text-sm flex items-center gap-2"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
               >
-                <Heart className="w-4 h-4 text-[#C0392B] fill-[#C0392B]" />
-              </motion.span>
-            
-            </motion.p>
+                © 2026 Throttle LK. All rights reserved. Made with
+                <motion.span
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                >
+                  <Heart className="w-4 h-4 text-[#C0392B] fill-[#C0392B]" />
+                </motion.span>
+              </p>
+              <div className="flex flex-wrap gap-3 text-xs text-[#F0EDE8]/40">
+                <button
+                  type="button"
+                  className="hover:text-[#C0392B]"
+                  onClick={() => {
+                    navigate('/privacy');
+                    window.scrollTo({ top: 0 });
+                  }}
+                >
+                  Privacy
+                </button>
+                <button
+                  type="button"
+                  className="hover:text-[#C0392B]"
+                  onClick={() => {
+                    navigate('/terms');
+                    window.scrollTo({ top: 0 });
+                  }}
+                >
+                  Terms
+                </button>
+              </div>
+            </motion.div>
 
             {/* Payment/Trust Badges */}
             <motion.div
